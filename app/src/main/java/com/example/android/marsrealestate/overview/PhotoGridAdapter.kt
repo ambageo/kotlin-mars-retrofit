@@ -29,8 +29,8 @@ import com.example.android.marsrealestate.network.MarsProperty
  * This class implements a [RecyclerView] [ListAdapter] which uses Data Binding to present [List]
  * data, including computing diffs between lists.
  */
-// TODO (08) Have PhotoGridAdapter take the OnClickListener class as a constructor property parameter
-class PhotoGridAdapter : ListAdapter<MarsProperty, PhotoGridAdapter.MarsPropertyViewHolder>(DiffCallback) {
+// TODO (08) Have PhotoGridAdapter take the OnClickListener class as a constructor property parameter //DONE
+class PhotoGridAdapter(private val onClickListener:OnClickListener) : ListAdapter<MarsProperty, PhotoGridAdapter.MarsPropertyViewHolder>(DiffCallback) {
 
     /**
      * The MarsPropertyViewHolder constructor takes the binding variable from the associated
@@ -73,9 +73,15 @@ class PhotoGridAdapter : ListAdapter<MarsProperty, PhotoGridAdapter.MarsProperty
      */
     override fun onBindViewHolder(holder: MarsPropertyViewHolder, position: Int) {
         val marsProperty = getItem(position)
-        // TODO (09) Call the onClick Function from the onClickListener in a lambda from setOnClickListener
+        // TODO (09) Call the onClick Function from the onClickListener in a lambda from setOnClickListener //DONE
+        holder.itemView.setOnClickListener{
+            onClickListener.onClick(marsProperty)
+        }
         holder.bind(marsProperty)
     }
 
-    // TODO (07) Create an OnClickListener class with a lambda in its constructor that initializes a matching onClick function
+    // TODO (07) Create an OnClickListener class with a lambda in its constructor that initializes a matching onClick function //DONE
+    class OnClickListener(val clickListener:(marsProperty:MarsProperty) -> Unit){
+        fun onClick(marsProperty: MarsProperty) = clickListener(marsProperty)
+    }
 }
