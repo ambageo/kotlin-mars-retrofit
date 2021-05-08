@@ -25,6 +25,7 @@ import com.example.android.marsrealestate.network.MarsProperty
 //import kotlinx.coroutines.CoroutineScope
 //import kotlinx.coroutines.Dispatchers
 import androidx.lifecycle.viewModelScope
+import com.example.android.marsrealestate.network.MarsApiFilter
 import kotlinx.coroutines.launch
 
 enum class MarsApiStatus { LOADING, ERROR, DONE }
@@ -61,8 +62,8 @@ class OverviewViewModel : ViewModel() {
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
      */
     init {
-        // TODO (05) Add MarsApiFilter.SHOW_ALL as a default parameter to the initial getMarsRealEstateProperties call
-        getMarsRealEstateProperties()
+        // TODO (05) Add MarsApiFilter.SHOW_ALL as a default parameter to the initial getMarsRealEstateProperties call //DONE
+        getMarsRealEstateProperties(MarsApiFilter.SHOW_ALL)
     }
 
     /**
@@ -70,13 +71,13 @@ class OverviewViewModel : ViewModel() {
      * [MarsProperty] [List] and [MarsApiStatus] [LiveData]. The Retrofit service returns a
      * coroutine Deferred, which we await to get the result of the transaction.
      */
-    // TODO (03) Add MarsApiFilter parameter to getMarsRealEstateProperties
-    private fun getMarsRealEstateProperties() {
+    // TODO (03) Add MarsApiFilter parameter to getMarsRealEstateProperties //DONE
+    private fun getMarsRealEstateProperties(filter:MarsApiFilter) {
         viewModelScope.launch {
-            // TODO (04) Add filter to getProperties() with filter.value
+            // TODO (04) Add filter to getProperties() with filter.value //DONE
             _status.value = MarsApiStatus.LOADING
             try {
-                _properties.value = MarsApi.retrofitService.getProperties()
+                _properties.value = MarsApi.retrofitService.getProperties(filter.value)
                 _status.value = MarsApiStatus.DONE
             } catch (e: Exception) {
                 _status.value = MarsApiStatus.ERROR
@@ -103,5 +104,8 @@ class OverviewViewModel : ViewModel() {
         _navigateToSelectedProperty.value = null
     }
 
-    // TODO (06) Add updateFilter method that takes a filter input and re-gets the properties
+    // TODO (06) Add updateFilter method that takes a filter input and re-gets the properties //DONE
+    fun updateFilter(filter: MarsApiFilter){
+        getMarsRealEstateProperties(filter)
+    }
 }
